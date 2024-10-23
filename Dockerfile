@@ -27,6 +27,12 @@ RUN a2enmod rewrite
 
 # Copy the application files to the container
 COPY . /var/www/html
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install PHP dependencies using Composer
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+
 
 # Set the Apache document root to Laravel's public directory
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
